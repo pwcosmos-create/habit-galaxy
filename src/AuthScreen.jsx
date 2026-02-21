@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useStore from './store';
-import { signIn, signUp, signInWithGoogle } from './supabaseClient';
+import { signIn, signUp, signInWithGoogle, isSupabaseConfigured } from './supabaseClient';
 
 export const AuthScreen = ({ onLogin }) => {
     const [isLogin, setIsLogin] = useState(true);
@@ -26,6 +26,14 @@ export const AuthScreen = ({ onLogin }) => {
             return;
         }
 
+        // ── Demo Mode Bypass Logic ──
+        if (!isSupabaseConfigured()) {
+            addNotification(t('demoModeWelcome'));
+            onLogin();
+            setLoading(false);
+            return;
+        }
+
         try {
             let result;
             if (isLogin) {
@@ -34,20 +42,7 @@ export const AuthScreen = ({ onLogin }) => {
                 result = await signUp(email, password);
             }
             if (result.error) {
-                if (result.error.message?.includes('PLACEHOLDER') || result.error.message?.includes('fetch')) {
-                    // Demo Mode Signup Reward logic
-                    if (!isLogin) {
-                        useStore.setState((state) => ({
-                            user: { ...state.user, gems: state.user.gems + 100, level: 1, xp: 0, streak: 0 }
-                        }));
-                        addNotification(t('signupRewardNotice'));
-                    } else {
-                        addNotification(t('demoModeWelcome'));
-                    }
-                    onLogin();
-                } else {
-                    setError(result.error.message);
-                }
+                setError(result.error.message);
             } else {
                 addNotification(t('welcomeHero'));
                 onLogin();
