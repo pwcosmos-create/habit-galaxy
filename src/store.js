@@ -265,15 +265,45 @@ const useStore = create(
                 const state = get();
                 if (state.user.gems >= 100) {
                     const newGems = state.user.gems - 100;
+
+                    // Random drop logic
+                    const rand = Math.random();
+                    let notifText = '';
+                    let newInventory = [...state.inventory];
+
+                    // 10% chance for Orbital Strike, 15% for Warp Drive, 25% Stasis Field, 50% just star coins
+                    if (rand < 0.10) {
+                        newInventory[0].qty += 1; // Orbital Strike
+                        notifText = `🎁 Mystery Box Opened! You found 1x Orbital Strike!`;
+                    } else if (rand < 0.25) {
+                        newInventory[1].qty += 1; // Warp Drive
+                        notifText = `🎁 Mystery Box Opened! You found 1x Warp Drive!`;
+                    } else if (rand < 0.50) {
+                        newInventory[2].qty += 1; // Stasis Field
+                        notifText = `🎁 Mystery Box Opened! You found 1x Stasis Field!`;
+                    } else {
+                        // 500 Star Coins
+                        set((state) => ({
+                            user: { ...state.user, gems: newGems, starCoins: state.user.starCoins + 500 },
+                            notifications: [...state.notifications, { id: Date.now(), text: `🎁 Mystery Box Opened! You found 500 Star Coins!` }]
+                        }));
+                        const { supabase, saveProgress } = await import('./supabaseClient');
+                        const { data: { user } } = await supabase.auth.getUser();
+                        if (user) await saveProgress(user.id, { ...get().user });
+                        return;
+                    }
+
+                    // Item logic
                     set((state) => ({
                         user: { ...state.user, gems: newGems },
-                        notifications: [...state.notifications, { id: Date.now(), text: translations[state.language].purchaseSuccess }]
+                        inventory: newInventory,
+                        notifications: [...state.notifications, { id: Date.now(), text: notifText }]
                     }));
 
                     // Sync to Supabase
                     const { supabase, saveProgress } = await import('./supabaseClient');
                     const { data: { user } } = await supabase.auth.getUser();
-                    if (user) await saveProgress(user.id, { ...get().user, gems: newGems });
+                    if (user) await saveProgress(user.id, { ...get().user });
                 }
             },
 
