@@ -62,7 +62,7 @@ const useStore = create(
                 setTimeout(() => {
                     set({ isWatchConnected: true, stepsToday: 5420 });
                     get().addNotification(get().t('watchConnected'));
-                }, 2000);
+                }, 500); // Reduced delay for smoother, faster UX
             },
 
             // ── Supabase Integration Actions ──
