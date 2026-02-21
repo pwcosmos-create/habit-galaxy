@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './index.css';
 import useStore from './store';
-import { supabase } from './supabaseClient';
+import { supabase, isSupabaseConfigured } from './supabaseClient';
 import { HomeScreen } from './App';
 import { StoreScreen } from './StoreScreen';
 import { BossQuestScreen } from './BossQuestScreen';
@@ -14,6 +14,31 @@ export default function AppLayout() {
     const [activeTab, setActiveTab] = useState('home');
     const [showSettings, setShowSettings] = useState(false);
     const { isAuthenticated, setAuth, loadProfile, t, isWatchConnected, stepsToday } = useStore();
+
+    if (!isSupabaseConfigured()) {
+        return (
+            <div className="bg-background-dark min-h-screen flex flex-col items-center justify-center p-8 text-center font-display">
+                <div className="absolute inset-0 opacity-20 star-field pointer-events-none"></div>
+                <div className="z-10 animate-fadeIn">
+                    <span className="material-symbols-outlined text-red-500 text-6xl mb-4 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]">warning</span>
+                    <h1 className="text-2xl font-black text-white uppercase tracking-widest mb-2">Configuration Required</h1>
+                    <p className="text-slate-400 text-sm mb-8 max-w-xs mx-auto leading-relaxed">
+                        Supabase URL and Anon Key are missing. Please add them to your <code className="text-primary">.env</code> or Vercel Environment Variables.
+                    </p>
+                    <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-left font-mono text-[10px] text-slate-500 space-y-2">
+                        <div className="flex justify-between"><span>VITE_SUPABASE_URL</span> <span className="text-red-400">MISSING</span></div>
+                        <div className="flex justify-between"><span>VITE_SUPABASE_ANON_KEY</span> <span className="text-red-400">MISSING</span></div>
+                    </div>
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="mt-8 px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/20 rounded-full text-xs font-black uppercase tracking-widest transition-all"
+                    >
+                        Check Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     useEffect(() => {
         // Check current session

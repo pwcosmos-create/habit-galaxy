@@ -4,10 +4,21 @@ import { createClient } from '@supabase/supabase-js';
 // 👇 Supabase 프로젝트를 만들면 아래 두 값을 채워주세요!
 //    https://supabase.com → New Project → Settings → API
 // ──────────────────────────────────────────────────────────
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? 'https://PLACEHOLDER.supabase.co';
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY ?? 'PLACEHOLDER_KEY';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('YOUR_PROJECT_ID')) {
+    console.error('⚠️ Supabase configuration is missing or invalid! Check your .env or Vercel Environment Variables.');
+}
+
+export const isSupabaseConfigured = () => {
+    return supabaseUrl && supabaseAnonKey && !supabaseUrl.includes('YOUR_PROJECT_ID') && supabaseUrl.startsWith('https://');
+};
+
+export const supabase = createClient(
+    supabaseUrl || 'https://placeholder.supabase.co',
+    supabaseAnonKey || 'placeholder'
+);
 
 // ──────────────────────────────────────────────────────────
 // Auth Helpers
