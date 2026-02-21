@@ -40,6 +40,14 @@ export const StoreScreen = () => {
                         />
                         <h2 className="text-xl font-black uppercase tracking-tight mt-6">{t('mysteryBox')}</h2>
                         <p className="text-slate-400 text-xs mt-2 text-center break-keep">Spend gems to discover powerful orbital weapons, time items, or coins!</p>
+
+                        <div className="mt-4 bg-black/40 p-3 rounded-xl border border-white/5 w-full flex flex-col gap-1.5 backdrop-blur-md">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1 text-center border-b border-white/5 pb-1">Drop Probabilities</p>
+                            <div className="flex justify-between text-[10px] font-bold"><span className="text-yellow-500">Star Coins (500)</span> <span>50%</span></div>
+                            <div className="flex justify-between text-[10px] font-bold"><span className="text-slate-400">Stasis Field</span> <span>25%</span></div>
+                            <div className="flex justify-between text-[10px] font-bold"><span className="text-accent-cyan">Warp Drive</span> <span>15%</span></div>
+                            <div className="flex justify-between text-[10px] font-bold"><span className="text-red-500">Orbital Strike</span> <span>10%</span></div>
+                        </div>
                     </div>
 
                     <div className="mt-20 z-10 w-full flex flex-col items-center gap-3">
