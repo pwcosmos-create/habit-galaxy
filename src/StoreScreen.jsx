@@ -1,6 +1,7 @@
 import React from 'react';
 import useStore from './store';
 import { playCoin, playError } from './sfx';
+import mysteryBoxImg from './assets/mystery_box.png';
 import './index.css';
 
 export const StoreScreen = () => {
@@ -34,7 +35,7 @@ export const StoreScreen = () => {
                     <div className="absolute inset-0 bg-primary/5 rounded-full blur-[80px] animate-pulse"></div>
                     <div className="relative z-10 gacha-glow rounded-3xl p-8 flex flex-col items-center">
                         <img
-                            src="/mystery_box.png"
+                            src={mysteryBoxImg}
                             alt="Mystery Box"
                             className="w-48 h-48 object-cover rounded-3xl drop-shadow-[0_0_20px_rgba(244,209,37,0.4)] animate-bounce border-2 border-primary/20"
                         />
