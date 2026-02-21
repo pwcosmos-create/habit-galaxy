@@ -269,14 +269,17 @@ const useStore = create(
                     // Random drop logic
                     const rand = Math.random();
                     let notifText = '';
+                    let itemType = '';
                     let newInventory = [...state.inventory];
 
                     // 10% chance for Orbital Strike, 15% for Warp Drive, 25% Stasis Field, 50% just star coins
                     if (rand < 0.10) {
                         newInventory[0].qty += 1; // Orbital Strike
+                        itemType = 'orbital_strike';
                         notifText = `🎁 Mystery Box Opened! You found 1x Orbital Strike!`;
                     } else if (rand < 0.25) {
                         newInventory[1].qty += 1; // Warp Drive
+                        itemType = 'warp_drive';
                         notifText = `🎁 Mystery Box Opened! You found 1x Warp Drive!`;
                     } else if (rand < 0.50) {
                         newInventory[2].qty += 1; // Stasis Field
@@ -290,7 +293,7 @@ const useStore = create(
                         const { supabase, saveProgress } = await import('./supabaseClient');
                         const { data: { user } } = await supabase.auth.getUser();
                         if (user) await saveProgress(user.id, { ...get().user });
-                        return;
+                        return { type: 'star_coins', amount: 500 };
                     }
 
                     // Item logic
@@ -304,7 +307,10 @@ const useStore = create(
                     const { supabase, saveProgress } = await import('./supabaseClient');
                     const { data: { user } } = await supabase.auth.getUser();
                     if (user) await saveProgress(user.id, { ...get().user });
+
+                    return { type: 'item', id: itemType };
                 }
+                return null;
             },
 
             addGems: async (amount) => {
