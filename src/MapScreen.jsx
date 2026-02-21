@@ -20,6 +20,31 @@ const spaceshipIcon = L.divIcon({
     iconAnchor: [20, 20],
 });
 
+const turfIcon = L.divIcon({
+    html: `<span class="material-symbols-outlined text-red-500 text-3xl drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]">flag</span>`,
+    className: 'custom-div-icon',
+    iconSize: [30, 30],
+    iconAnchor: [15, 30],
+});
+
+const lootIcon = L.divIcon({
+    html: `<span class="material-symbols-outlined text-accent-cyan text-2xl drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] animate-bounce" style="display: block; position: relative; top: -10px;">diamond</span>`,
+    className: 'custom-div-icon',
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+});
+
+const calculateDist = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Earth radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+};
+
+
 // Component to handle map center updates
 const RecenterMap = ({ position }) => {
     const map = useMap();
@@ -38,17 +63,42 @@ export const MapScreen = () => {
     const [pointsEarned, setPointsEarned] = useState(0);
     const watchId = useRef(null);
     const lastPos = useRef(null);
+    const [lootItems, setLootItems] = useState([]);
+    const [turfMarkers, setTurfMarkers] = useState([]);
+    const [weather, setWeather] = useState('clear');
 
-    const calculateDistance = (lat1, lon1, lat2, lon2) => {
-        const R = 6371; // Earth radius in km
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    };
+    useEffect(() => {
+        const hour = new Date().getHours();
+        if (hour >= 18 || hour < 6) setWeather('meteor');
+        else if (hour >= 12 && hour < 18) setWeather('nebula');
+    }, []);
+
+    useEffect(() => {
+        if (!position || lootItems.length === 0) return;
+        setLootItems(prev => {
+            let pickedUpAny = false;
+            let gemsFound = 0;
+            const updated = prev.map(loot => {
+                if (loot.active) {
+                    const dist = calculateDist(position[0], position[1], loot.lat, loot.lng);
+                    if (dist < 0.05) { // 50 meters
+                        pickedUpAny = true;
+                        gemsFound += loot.value;
+                        return { ...loot, active: false };
+                    }
+                }
+                return loot;
+            });
+            if (pickedUpAny) {
+                setTimeout(() => {
+                    addGems(gemsFound);
+                    addNotification(`💎 우주 크리스탈 발견! +${gemsFound} 젬 획득!`);
+                }, 0);
+                return updated;
+            }
+            return prev;
+        });
+    }, [position, addGems, addNotification]);
 
     const startExpedition = () => {
         if (!navigator.geolocation) {
@@ -67,7 +117,7 @@ export const MapScreen = () => {
                 setPosition(newPos);
 
                 if (lastPos.current) {
-                    const dist = calculateDistance(lastPos.current[0], lastPos.current[1], latitude, longitude);
+                    const dist = calculateDist(lastPos.current[0], lastPos.current[1], latitude, longitude);
                     if (dist > 0.005) { // Minimum 5 meters to count as movement
                         setTotalDistance(prev => {
                             const updated = prev + dist;
@@ -102,7 +152,25 @@ export const MapScreen = () => {
     useEffect(() => {
         // Get initial position
         navigator.geolocation.getCurrentPosition((pos) => {
-            setPosition([pos.coords.latitude, pos.coords.longitude]);
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+            setPosition([lat, lng]);
+
+            // Generate random structural data for Turfs and Loots
+            setLootItems(Array(8).fill().map((_, i) => ({
+                id: i,
+                lat: lat + (Math.random() - 0.5) * 0.015,
+                lng: lng + (Math.random() - 0.5) * 0.015,
+                value: Math.floor(Math.random() * 50) + 20,
+                active: true
+            })));
+
+            setTurfMarkers([{
+                id: 'base-1',
+                lat: lat + 0.003,
+                lng: lng - 0.003,
+                name: "Sector Alpha HQ"
+            }]);
         });
         return () => {
             if (watchId.current) navigator.geolocation.clearWatch(watchId.current);
@@ -134,6 +202,8 @@ export const MapScreen = () => {
             </header>
 
             <div className="flex-1 relative">
+                {weather === 'meteor' && <div className="absolute inset-0 pointer-events-none z-[400] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent opacity-60 mix-blend-color-dodge"></div>}
+                {weather === 'nebula' && <div className="absolute inset-0 pointer-events-none z-[400] bg-accent-cyan/10 mix-blend-color-dodge"></div>}
                 {position ? (
                     <MapContainer
                         center={position}
@@ -147,6 +217,15 @@ export const MapScreen = () => {
                         />
                         <Marker position={position} icon={spaceshipIcon} />
                         <Polyline positions={path} color="#f4d125" weight={5} opacity={0.7} />
+
+                        {lootItems.filter(l => l.active).map(loot => (
+                            <Marker key={`loot-${loot.id}`} position={[loot.lat, loot.lng]} icon={lootIcon} />
+                        ))}
+
+                        {turfMarkers.map(turf => (
+                            <Marker key={turf.id} position={[turf.lat, turf.lng]} icon={turfIcon} />
+                        ))}
+
                         <RecenterMap position={position} />
                     </MapContainer>
                 ) : (
