@@ -245,11 +245,17 @@ export const MapScreen = ({ isActive = true }) => {
                 <div className="absolute bottom-32 left-0 right-0 px-5 z-20">
                     <div className="glass-panel p-6 rounded-3xl border-primary/20 shadow-2xl flex flex-col gap-6">
                         <div className="flex justify-between items-center">
-                            <div className="flex flex-col">
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{t('distanceTravelled')}</span>
-                                <span className="text-3xl font-black text-white">{totalDistance.toFixed(2)} <span className="text-sm text-slate-400">{t('km')}</span></span>
+                            <div className="flex gap-6">
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{t('distanceTravelled')}</span>
+                                    <span className="text-3xl font-black text-white">{totalDistance.toFixed(2)} <span className="text-sm text-slate-400">{t('km')}</span></span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{t('steps') || 'STEPS'}</span>
+                                    <span className="text-3xl font-black text-accent-cyan">{Math.floor(totalDistance * 1333).toLocaleString()}</span>
+                                </div>
                             </div>
-                            <div className={`size-12 rounded-full flex items-center justify-center ${isExpeditionActive ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-primary/20 text-primary'}`}>
+                            <div className={`size-12 rounded-full flex items-center justify-center shrink-0 ${isExpeditionActive ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-primary/20 text-primary'}`}>
                                 <span className="material-symbols-outlined">{isExpeditionActive ? 'radar' : 'location_on'}</span>
                             </div>
                         </div>
