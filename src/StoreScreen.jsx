@@ -34,12 +34,12 @@ export const StoreScreen = () => {
                     <div className="absolute inset-0 bg-primary/5 rounded-full blur-[80px] animate-pulse"></div>
                     <div className="relative z-10 gacha-glow rounded-3xl p-8 flex flex-col items-center">
                         <img
-                            src="https://lh3.googleusercontent.com/aida-public/ALyG7W_7mB4Gv-6b-hXm0o1V1Z1Y1Z1Y1Z1Y1Z1Y1Z1Y1Z1Y1Z1Y1Z1Y1Z1Y1Z=s512"
+                            src="https://images.unsplash.com/photo-1633519139455-d36cfaea78ca?auto=format&fit=crop&q=80&w=512&h=512"
                             alt="Mystery Box"
-                            className="w-48 h-48 object-contain drop-shadow-[0_0_20px_rgba(244,209,37,0.4)] animate-bounce"
+                            className="w-48 h-48 object-cover rounded-3xl drop-shadow-[0_0_20px_rgba(244,209,37,0.4)] animate-bounce border-2 border-primary/20"
                         />
                         <h2 className="text-xl font-black uppercase tracking-tight mt-6">{t('mysteryBox')}</h2>
-                        <p className="text-slate-400 text-xs mt-2 text-center">{t('mysteryBoxDesc')}</p>
+                        <p className="text-slate-400 text-xs mt-2 text-center break-keep">Spend gems to discover powerful orbital weapons, time items, or coins!</p>
                     </div>
 
                     <div className="mt-20 z-10 w-full flex flex-col items-center gap-3">
