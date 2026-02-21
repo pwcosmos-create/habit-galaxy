@@ -23,6 +23,7 @@ const useStore = create(
                 steps: 0,
                 targetSteps: 10000
             },
+            pendingRewards: null, // { steps: 1500, gems: 15 }
             inventory: [
                 { id: 'orbital_strike', name: 'Orbital Strike', description: 'Instantly deal 50,000 damage to the current boss.', icon: 'rocket_launch', color: 'red-500', qty: 2 },
                 { id: 'warp_drive', name: 'Warp Drive', description: 'Next habit grants 2.0x XP multiplier.', icon: 'bolt', color: 'accent-cyan', qty: 1 },
@@ -129,18 +130,16 @@ const useStore = create(
 
             syncHealthData: async () => {
                 const extraSteps = 1500;
-                const oldSteps = get().stepsToday;
-                const newSteps = oldSteps + extraSteps;
                 const gemsEarned = Math.floor(extraSteps / 100);
 
                 set((state) => {
+                    const currentPending = state.pendingRewards || { steps: 0, gems: 0 };
                     const newState = {
-                        stepsToday: newSteps,
-                        user: { ...state.user, gems: state.user.gems + gemsEarned },
-                        notifications: [...state.notifications, {
-                            id: Date.now(),
-                            text: `${translations[state.language].syncing} +${extraSteps} ${translations[state.language].steps} (+${gemsEarned} 💎)`
-                        }]
+                        stepsToday: state.stepsToday + extraSteps,
+                        pendingRewards: {
+                            steps: currentPending.steps + extraSteps,
+                            gems: currentPending.gems + gemsEarned
+                        }
                     };
 
                     // Incubator logic
@@ -163,7 +162,28 @@ const useStore = create(
                 const currentState = get();
                 const { supabase, saveProgress } = await import('./supabaseClient');
                 const { data: { user } } = await supabase.auth.getUser();
-                if (user) await saveProgress(user.id, state.user);
+                if (user) await saveProgress(user.id, currentState.user);
+            },
+
+            claimDailyReport: async () => {
+                const state = get();
+                if (!state.pendingRewards) return;
+
+                const gemsEarned = state.pendingRewards.gems;
+
+                set((s) => ({
+                    user: { ...s.user, gems: s.user.gems + gemsEarned },
+                    pendingRewards: null,
+                    notifications: [...s.notifications, {
+                        id: Date.now(),
+                        text: `Daily Report Claimed! +${gemsEarned} 💎`
+                    }]
+                }));
+
+                const currentState = get();
+                const { supabase, saveProgress } = await import('./supabaseClient');
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) await saveProgress(user.id, currentState.user);
             },
 
             useItem: async (itemId) => {

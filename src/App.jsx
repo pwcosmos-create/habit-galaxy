@@ -27,7 +27,7 @@ const StreakFire = ({ streak }) => {
 };
 
 export const HomeScreen = () => {
-  const { user, habits, completeHabit, t, language, setLanguage, isWatchConnected, connectWatch, syncHealthData, stepsToday } = useStore();
+  const { user, habits, completeHabit, t, language, setLanguage, pendingRewards, claimDailyReport } = useStore();
   const [currentTime, setCurrentTime] = React.useState(new Date());
   const xpPercentage = Math.min((user.xp / user.maxXp) * 100, 100);
 
@@ -50,6 +50,38 @@ export const HomeScreen = () => {
     <div className="bg-background-dark text-slate-100 min-h-screen flex flex-col items-center overflow-x-hidden font-display relative">
       <StreakFire streak={user.streak} />
       <div className="absolute inset-0 pointer-events-none opacity-20 star-field"></div>
+
+      {/* ── Daily Report Popup ── */}
+      {pendingRewards && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+          <div className="bg-background-dark/95 border border-primary/30 shadow-[0_0_50px_rgba(244,209,37,0.2)] rounded-3xl p-6 w-full max-w-sm flex flex-col items-center animate-[bounce_0.5s_ease-out]">
+            <span className="material-symbols-outlined text-6xl text-primary animate-pulse mb-2">assignment_turned_in</span>
+            <h2 className="text-2xl font-black uppercase text-white tracking-widest text-center">Daily Report</h2>
+            <p className="text-sm font-bold text-slate-400 mt-1 mb-6 text-center italic">Your exploration rewards have arrived!</p>
+
+            <div className="w-full bg-black/40 p-4 rounded-2xl border border-white/10 flex flex-col gap-3 mb-6">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-black uppercase tracking-widest text-slate-400">Total Steps</span>
+                <span className="text-lg font-black text-white">{pendingRewards.steps.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-black uppercase tracking-widest text-accent-cyan">Gems Found</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-lg font-black text-accent-cyan">+{pendingRewards.gems.toLocaleString()}</span>
+                  <span className="material-symbols-outlined text-accent-cyan text-sm">diamond</span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={claimDailyReport}
+              className="w-full bg-primary text-black font-black uppercase tracking-widest py-4 rounded-xl hover:scale-105 transition-all shadow-[0_0_20px_rgba(244,209,37,0.4)]"
+            >
+              Claim Rewards
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── Language Top Toggles ── */}
       <div className="absolute top-4 right-5 z-50 flex gap-1 bg-black/20 backdrop-blur-md p-1 rounded-full border border-white/5">
