@@ -159,8 +159,8 @@ export const MapScreen = () => {
             // Generate random structural data for Turfs and Loots
             setLootItems(Array(8).fill().map((_, i) => ({
                 id: i,
-                lat: lat + (Math.random() - 0.5) * 0.015,
-                lng: lng + (Math.random() - 0.5) * 0.015,
+                lat: lat + (Math.random() - 0.5) * 0.003,
+                lng: lng + (Math.random() - 0.5) * 0.003,
                 value: Math.floor(Math.random() * 50) + 20,
                 active: true
             })));
