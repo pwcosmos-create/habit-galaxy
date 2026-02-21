@@ -70,7 +70,13 @@ export const translations = {
         connectingWatch: "Syncing with Galaxy Watch...",
         connectYourWatch: "Connect your Smart Watch",
         pairNow: "Pair Now",
-        watchInfo: "Watch Info"
+        watchInfo: "Watch Info",
+        dailyReportTitle: "Daily Report",
+        dailyReportDesc: "Your exploration rewards have arrived!",
+        totalSteps: "Total Steps",
+        gemsFound: "Gems Found",
+        claimRewards: "Claim Rewards",
+        dailyReportClaimed: "Daily Report Claimed! +{gems} 💎"
     },
     ko: {
         appName: "해빗 갤럭시",
@@ -143,7 +149,13 @@ export const translations = {
         connectingWatch: "갤럭시 워치 동기화 중...",
         connectYourWatch: "스마트워치를 연결하세요",
         pairNow: "지금 연결",
-        watchInfo: "워치 정보"
+        watchInfo: "워치 정보",
+        dailyReportTitle: "일일 정산 보고서",
+        dailyReportDesc: "오늘의 탐사 보상이 도착했습니다!",
+        totalSteps: "오늘의 총 걸음 수",
+        gemsFound: "획득한 젬",
+        claimRewards: "보상 수령하기",
+        dailyReportClaimed: "일일 정산 완료! +{gems} 💎"
     },
     jp: {
         appName: "ハビット・ギャラクシー",
@@ -212,7 +224,13 @@ export const translations = {
         signupRewardNotice: "🎁 新規登録ボーナス！ジェム100個を獲得しました。",
         stayLoggedIn: "ログイン状態を保持",
         settings: "設定",
-        logout: "ログアウト"
+        logout: "ログアウト",
+        dailyReportTitle: "日次報告書",
+        dailyReportDesc: "今日の探索報酬が届きました！",
+        totalSteps: "本日の歩数",
+        gemsFound: "獲得ジェム",
+        claimRewards: "報酬を受け取る",
+        dailyReportClaimed: "日次報酬を獲得しました！ +{gems} 💎"
     },
     es: {
         appName: "Habit Galaxy",
@@ -281,7 +299,13 @@ export const translations = {
         signupRewardNotice: "🎁 ¡Recompensa de Bienvenida! Se han añadido 100 Gemas a tu cuenta.",
         stayLoggedIn: "Mantener sesión iniciada",
         settings: "Ajustes",
-        logout: "Cerrar sesión"
+        logout: "Cerrar sesión",
+        dailyReportTitle: "Informe Diario",
+        dailyReportDesc: "¡Han llegado tus recompensas de exploración!",
+        totalSteps: "Pasos Totales",
+        gemsFound: "Gemas Encontradas",
+        claimRewards: "Reclamar Recompensas",
+        dailyReportClaimed: "¡Recompensas reclamadas! +{gems} 💎"
     },
     zh: {
         appName: "习惯银河",
@@ -350,6 +374,12 @@ export const translations = {
         signupRewardNotice: "🎁 欢迎奖赏！已向您的账户发放 100 颗宝石。",
         stayLoggedIn: "保持登录状态",
         settings: "设置",
-        logout: "退出登录"
+        logout: "退出登录",
+        dailyReportTitle: "每日结算报告",
+        dailyReportDesc: "您的今日探索奖励已送达！",
+        totalSteps: "今日总步数",
+        gemsFound: "获得宝石",
+        claimRewards: "领取奖励",
+        dailyReportClaimed: "每日结算完成！ +{gems} 💎"
     }
 };

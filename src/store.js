@@ -176,7 +176,7 @@ const useStore = create(
                     pendingRewards: null,
                     notifications: [...s.notifications, {
                         id: Date.now(),
-                        text: `Daily Report Claimed! +${gemsEarned} 💎`
+                        text: get().t('dailyReportClaimed', { gems: gemsEarned })
                     }]
                 }));
 
