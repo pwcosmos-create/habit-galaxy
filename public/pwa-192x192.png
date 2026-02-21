@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pet Accessory Store &amp; Gacha Variant 2</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4c025",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#0a0904",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: radial-gradient(circle at top right, #2a2512 0%, #0a0904 60%);
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-gold {
+            background: linear-gradient(135deg, rgba(244, 192, 37, 0.1), rgba(244, 192, 37, 0.02));
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(244, 192, 37, 0.2);
+        }
+        .gacha-glow {
+            box-shadow: 0 0 80px -10px rgba(244, 192, 37, 0.3);
+        }
+        .pill-glow {
+            box-shadow: inset 0 0 10px rgba(244, 192, 37, 0.1);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-hidden">
+<!-- Top Status Bar (Currency) -->
+<header class="p-6 pb-2 flex items-center justify-between gap-3">
+<div class="flex gap-2">
+<div class="glass pill-glow px-4 py-2 rounded-full flex items-center gap-2 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-xl">database</span>
+<span class="text-sm font-bold tracking-tight">1,250</span>
+</div>
+<div class="glass pill-glow px-4 py-2 rounded-full flex items-center gap-2 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-xl">bolt</span>
+<span class="text-sm font-bold tracking-tight">45</span>
+</div>
+</div>
+<button class="glass size-11 rounded-full flex items-center justify-center text-primary/80">
+<span class="material-symbols-outlined">help</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col items-center justify-center relative px-6 py-4">
+<!-- Floating Light Rays Background (CSS Gradient) -->
+<div class="absolute inset-0 z-0 flex items-center justify-center opacity-40 pointer-events-none">
+<div class="w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent"></div>
+</div>
+<!-- Central Gacha Box -->
+<div class="relative z-10 w-full max-w-[320px] aspect-square flex items-center justify-center group">
+<!-- Animated Glow Effect -->
+<div class="absolute inset-0 bg-primary/20 blur-[100px] rounded-full gacha-glow animate-pulse"></div>
+<!-- 3D Mystery Box Representation -->
+<div class="relative w-64 h-64 glass-gold rounded-xl flex items-center justify-center border-2 border-primary/30 transform transition-transform group-hover:scale-105 duration-700 shadow-2xl overflow-hidden">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+<!-- Box Core -->
+<div class="relative z-10 text-center">
+<span class="material-symbols-outlined text-8xl text-primary drop-shadow-[0_0_20px_rgba(244,192,37,0.8)]">deployed_code</span>
+<p class="mt-4 text-xs font-bold uppercase tracking-[0.3em] text-primary/60">Tier: Legendary</p>
+</div>
+<!-- Glass Reflection Shine -->
+<div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/10 to-transparent skew-y-[-10deg] -translate-y-8"></div>
+</div>
+<!-- Labels -->
+<div class="absolute -bottom-12 text-center w-full">
+<h2 class="text-2xl font-bold tracking-tight">Cyber-Pet Crate</h2>
+<p class="text-slate-400 text-sm font-medium">Contains Rare &amp; Mythic items</p>
+</div>
+</div>
+<!-- Summon Button -->
+<div class="mt-24 z-10 w-full flex flex-col items-center gap-4">
+<button class="group relative px-10 h-16 bg-primary rounded-full overflow-hidden flex items-center justify-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(244,192,37,0.4)]">
+<div class="absolute inset-0 bg-gradient-to-r from-white/30 via-transparent to-black/10 opacity-50"></div>
+<span class="material-symbols-outlined text-background-dark font-bold">auto_awesome</span>
+<span class="text-background-dark text-lg font-bold uppercase tracking-wider">Summon Now</span>
+<div class="ml-2 pl-3 border-l border-background-dark/20 text-background-dark font-black">500</div>
+</button>
+<p class="text-primary/60 text-xs font-bold uppercase tracking-widest">Guaranteed Rare in 3 pulls</p>
+</div>
+</main>
+<!-- Flash Deals Section -->
+<section class="mt-auto pb-6">
+<div class="px-6 flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<h3 class="text-sm font-bold uppercase tracking-widest">Flash Deals</h3>
+</div>
+<span class="text-xs font-mono bg-primary/20 text-primary px-2 py-1 rounded">04:22:51</span>
+</div>
+<div class="flex gap-4 overflow-x-auto px-6 pb-2 hide-scrollbar">
+<!-- Item 1 -->
+<div class="min-w-[160px] glass-gold p-4 rounded-xl flex flex-col items-center gap-3 relative group overflow-hidden">
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-primary text-background-dark text-[10px] font-bold rounded-full">NEW</div>
+<div class="size-20 bg-primary/10 rounded-full flex items-center justify-center relative">
+<span class="material-symbols-outlined text-4xl text-primary">flight</span>
+<div class="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="text-center">
+<p class="text-sm font-bold">Cyber Wings</p>
+<p class="text-[10px] text-primary/60 uppercase font-bold tracking-tighter">Legendary Accessory</p>
+</div>
+<button class="w-full h-9 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold flex items-center justify-center gap-2 hover:bg-primary hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined text-sm">lock_open</span>
+                    Unlock 1.2k
+                </button>
+</div>
+<!-- Item 2 -->
+<div class="min-w-[160px] glass p-4 rounded-xl flex flex-col items-center gap-3 relative group overflow-hidden">
+<div class="size-20 bg-slate-500/10 rounded-full flex items-center justify-center relative">
+<span class="material-symbols-outlined text-4xl text-slate-400">checkroom</span>
+</div>
+<div class="text-center">
+<p class="text-sm font-bold">Royal Cape</p>
+<p class="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">Epic Apparel</p>
+</div>
+<button class="w-full h-9 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold flex items-center justify-center gap-2 hover:bg-primary hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined text-sm">lock_open</span>
+                    Unlock 850
+                </button>
+</div>
+<!-- Item 3 -->
+<div class="min-w-[160px] glass p-4 rounded-xl flex flex-col items-center gap-3 relative group overflow-hidden">
+<div class="size-20 bg-slate-500/10 rounded-full flex items-center justify-center relative">
+<span class="material-symbols-outlined text-4xl text-slate-400">pets</span>
+</div>
+<div class="text-center">
+<p class="text-sm font-bold">Neon Collar</p>
+<p class="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">Rare Tech</p>
+</div>
+<button class="w-full h-9 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold flex items-center justify-center gap-2 hover:bg-primary hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined text-sm">lock_open</span>
+                    Unlock 400
+                </button>
+</div>
+</div>
+</section>
+<!-- Navigation Bar -->
+<nav class="glass border-t border-white/5 px-8 pt-4 pb-8 flex items-center justify-between">
+<a class="flex flex-col items-center gap-1 text-slate-500 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">storefront</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Store</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary relative" href="#">
+<span class="material-symbols-outlined text-3xl">token</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Gacha</span>
+<div class="absolute -top-1 w-1 h-1 bg-primary rounded-full blur-[2px]"></div>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">backpack</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Inventory</span>
+</a>
+</nav>
+<!-- Background Decoration -->
+<div class="fixed top-[-10%] left-[-10%] w-[40%] h-[30%] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="fixed bottom-[-5%] right-[-5%] w-[50%] h-[40%] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+</body></html>
