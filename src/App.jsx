@@ -162,12 +162,23 @@ export const HomeScreen = () => {
           </div>
         </header>
 
-        {/* ── Mascot ── */}
+        {/* ── Mascot & Pet ── */}
         <section className="flex-1 flex flex-col items-center justify-center relative min-h-[280px]">
           <div className="absolute top-0 right-0 glass-panel border-primary/30 py-1.5 px-3 rounded-lg flex items-center gap-2 glow-gold animate-bounce z-20">
             <span className="material-symbols-outlined text-primary text-sm">local_fire_department</span>
             <span className="text-[10px] font-black text-primary">{user.streak} {t('streakHeader')} x{user.multiplier} {t('multiplierHeader')}</span>
           </div>
+
+          {user.pet && (
+            <div className="absolute top-0 left-0 glass-panel border-white/20 py-2 px-3 rounded-xl flex items-center gap-3 shadow-lg z-20">
+              <span className="text-2xl animate-egg-wobble">{user.pet.avatar}</span>
+              <div className="flex flex-col">
+                <span className="text-[9px] font-black text-white uppercase tracking-widest">{user.pet.name}</span>
+                <span className="text-[8px] font-bold text-primary">{user.pet.bonus}</span>
+              </div>
+            </div>
+          )}
+
           <div className="absolute w-48 h-48 bg-accent-cyan/10 rounded-full blur-[60px] animate-pulse"></div>
           <div className="relative w-64 h-64 flex items-center justify-center z-10">
             <img

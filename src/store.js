@@ -15,12 +15,19 @@ const useStore = create(
                 starCoins: 1250,
                 gems: 45,
                 streak: 14,
-                multiplier: 1.0 // Reset to 1.0 (multiplier item effect)
+                multiplier: 1.0, // Reset to 1.0 (multiplier item effect)
+                pet: null // Active pet
+            },
+            incubator: {
+                active: false,
+                steps: 0,
+                targetSteps: 10000
             },
             inventory: [
                 { id: 'orbital_strike', name: 'Orbital Strike', description: 'Instantly deal 50,000 damage to the current boss.', icon: 'rocket_launch', color: 'red-500', qty: 2 },
                 { id: 'warp_drive', name: 'Warp Drive', description: 'Next habit grants 2.0x XP multiplier.', icon: 'bolt', color: 'accent-cyan', qty: 1 },
-                { id: 'stasis_field', name: 'Stasis Field', description: 'Protects your streak for 1 day (passive usage).', icon: 'hourglass_empty', color: 'slate-400', qty: 3 }
+                { id: 'stasis_field', name: 'Stasis Field', description: 'Protects your streak for 1 day (passive usage).', icon: 'hourglass_empty', color: 'slate-400', qty: 3 },
+                { id: 'alien_egg', name: 'Alien Egg', description: 'Place in incubator and walk 10,000 steps to hatch!', icon: 'egg', color: 'primary', qty: 1 }
             ],
             bosses: [
                 {
@@ -126,17 +133,34 @@ const useStore = create(
                 const newSteps = oldSteps + extraSteps;
                 const gemsEarned = Math.floor(extraSteps / 100);
 
-                set((state) => ({
-                    stepsToday: newSteps,
-                    user: { ...state.user, gems: state.user.gems + gemsEarned },
-                    notifications: [...state.notifications, {
-                        id: Date.now(),
-                        text: `${translations[state.language].syncing} +${extraSteps} ${translations[state.language].steps} (+${gemsEarned} 💎)`
-                    }]
-                }));
+                set((state) => {
+                    const newState = {
+                        stepsToday: newSteps,
+                        user: { ...state.user, gems: state.user.gems + gemsEarned },
+                        notifications: [...state.notifications, {
+                            id: Date.now(),
+                            text: `${translations[state.language].syncing} +${extraSteps} ${translations[state.language].steps} (+${gemsEarned} 💎)`
+                        }]
+                    };
+
+                    // Incubator logic
+                    if (state.incubator && state.incubator.active) {
+                        const newIncubatorSteps = state.incubator.steps + extraSteps;
+                        if (newIncubatorSteps >= state.incubator.targetSteps) {
+                            // Hatched!
+                            newState.incubator = { active: false, steps: 0, targetSteps: 10000 };
+                            newState.user.pet = { name: 'Nebula Slime', avatar: '🪐', bonus: '5% Extra XP' };
+                            newState.notifications.push({ id: Date.now() + 1, text: '✨ Alien Egg Hatched! You got a Nebula Slime!' });
+                        } else {
+                            newState.incubator = { ...state.incubator, steps: newIncubatorSteps };
+                        }
+                    }
+
+                    return newState;
+                });
 
                 // Proactively sync to Supabase
-                const state = get();
+                const currentState = get();
                 const { supabase, saveProgress } = await import('./supabaseClient');
                 const { data: { user } } = await supabase.auth.getUser();
                 if (user) await saveProgress(user.id, state.user);
@@ -161,8 +185,12 @@ const useStore = create(
                 } else if (itemId === 'warp_drive') {
                     newUser.multiplier = 2.0;
                     notifText = `⚡ Warp Drive Active! Next action grants 2.0x XP.`;
-                } else if (itemId === 'stasis_field') {
-                    notifText = `⏳ Stasis Field Active! Streak is protected.`;
+                } else if (itemId === 'alien_egg') {
+                    if (state.incubator.active) {
+                        return; // Already incubating
+                    }
+                    set((s) => ({ incubator: { active: true, steps: 0, targetSteps: 10000 } }));
+                    notifText = `🥚 Alien Egg placed in the Incubator! Walk 10,000 steps to hatch.`;
                 }
 
                 set((state) => ({

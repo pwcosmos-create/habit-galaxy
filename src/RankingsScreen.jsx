@@ -2,7 +2,7 @@ import React from 'react';
 import useStore from './store';
 
 export const RankingsScreen = () => {
-    const { t, language, setLanguage } = useStore();
+    const { t, language, setLanguage, user, incubator, stepsToday } = useStore();
 
     // Mock global data
     const leaderboard = [
@@ -36,6 +36,39 @@ export const RankingsScreen = () => {
                     </div>
                     <h1 className="text-3xl font-black text-white uppercase leading-none tracking-tight">World <span className="text-primary">Rankings</span></h1>
                 </header>
+
+                {/* Incubator Section */}
+                <div className="glass-panel p-5 rounded-3xl border-accent-cyan/20 shadow-[0_0_30px_rgba(34,211,238,0.1)] relative overflow-hidden mb-2">
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className={`size-12 rounded-2xl ${incubator?.active ? 'bg-primary/20 border-primary/30' : 'bg-slate-800 border-white/10'} flex items-center justify-center shrink-0`}>
+                            <span className={`material-symbols-outlined text-3xl ${incubator?.active ? 'text-primary animate-egg-wobble' : 'text-slate-500'}`}>
+                                {incubator?.active ? 'egg' : 'inventory_2'}
+                            </span>
+                        </div>
+                        <div className="flex-1">
+                            <h2 className="font-black text-sm uppercase tracking-widest text-white">Pet Incubator</h2>
+                            {incubator?.active ? (
+                                <p className="text-[10px] text-primary font-bold uppercase tracking-widest animate-pulse">Incubating Alien Egg...</p>
+                            ) : (
+                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Empty</p>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <div className="flex justify-between text-[10px] font-bold text-slate-400">
+                            <span>Steps Walked</span>
+                            <span className="text-white">{incubator?.active ? incubator.steps.toLocaleString() : 0} / {incubator?.active ? incubator.targetSteps.toLocaleString() : 10000}</span>
+                        </div>
+                        <div className="h-3 w-full bg-black/40 rounded-full border border-white/5 overflow-hidden p-[1px]">
+                            <div
+                                className={`h-full rounded-full transition-all duration-1000 ${incubator?.active ? 'bg-gradient-to-r from-primary/60 to-primary glow-gold' : 'bg-slate-700'}`}
+                                style={{ width: incubator?.active ? `${Math.min((incubator.steps / incubator.targetSteps) * 100, 100)}%` : '0%' }}
+                            ></div>
+                        </div>
+                        <p className="text-[9px] text-slate-500 mt-1 italic text-center">Open Mystery Boxes to find eggs!</p>
+                    </div>
+                </div>
 
                 {/* World Boss Event Card */}
                 <div className="glass-panel p-5 rounded-3xl border-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.1)] relative overflow-hidden">
