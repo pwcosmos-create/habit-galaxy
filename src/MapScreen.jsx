@@ -46,15 +46,21 @@ const calculateDist = (lat1, lon1, lat2, lon2) => {
 
 
 // Component to handle map center updates
-const RecenterMap = ({ position }) => {
+const RecenterMap = ({ position, isActive }) => {
     const map = useMap();
     useEffect(() => {
         if (position) map.setView(position, 17);
     }, [position, map]);
+
+    useEffect(() => {
+        if (isActive) {
+            setTimeout(() => map.invalidateSize(), 150);
+        }
+    }, [isActive, map]);
     return null;
 };
 
-export const MapScreen = () => {
+export const MapScreen = ({ isActive = true }) => {
     const { t, addGems, addNotification, language, setLanguage } = useStore();
     const [isExpeditionActive, setIsExpeditionActive] = useState(false);
     const [position, setPosition] = useState(null);
@@ -226,7 +232,7 @@ export const MapScreen = () => {
                             <Marker key={turf.id} position={[turf.lat, turf.lng]} icon={turfIcon} />
                         ))}
 
-                        <RecenterMap position={position} />
+                        <RecenterMap position={position} isActive={isActive} />
                     </MapContainer>
                 ) : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm z-10">
