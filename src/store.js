@@ -15,8 +15,13 @@ const useStore = create(
                 starCoins: 1250,
                 gems: 45,
                 streak: 14,
-                multiplier: 2.5
+                multiplier: 1.0 // Reset to 1.0 (multiplier item effect)
             },
+            inventory: [
+                { id: 'orbital_strike', name: 'Orbital Strike', description: 'Instantly deal 50,000 damage to the current boss.', icon: 'rocket_launch', color: 'red-500', qty: 2 },
+                { id: 'warp_drive', name: 'Warp Drive', description: 'Next habit grants 2.0x XP multiplier.', icon: 'bolt', color: 'accent-cyan', qty: 1 },
+                { id: 'stasis_field', name: 'Stasis Field', description: 'Protects your streak for 1 day (passive usage).', icon: 'hourglass_empty', color: 'slate-400', qty: 3 }
+            ],
             bosses: [
                 {
                     id: 1,
@@ -137,6 +142,42 @@ const useStore = create(
                 if (user) await saveProgress(user.id, state.user);
             },
 
+            useItem: async (itemId) => {
+                const state = get();
+                const itemIndex = state.inventory.findIndex(i => i.id === itemId);
+                if (itemIndex === -1 || state.inventory[itemIndex].qty <= 0) return;
+
+                const newInventory = [...state.inventory];
+                newInventory[itemIndex].qty -= 1;
+
+                let newUser = { ...state.user };
+                let newBosses = [...state.bosses];
+                let notifText = '';
+
+                if (itemId === 'orbital_strike') {
+                    const currentBoss = newBosses[state.currentBossIndex];
+                    currentBoss.hp = Math.max(0, currentBoss.hp - 50000);
+                    notifText = `💥 Orbital Strike Called! 50,000 DMG!`;
+                } else if (itemId === 'warp_drive') {
+                    newUser.multiplier = 2.0;
+                    notifText = `⚡ Warp Drive Active! Next action grants 2.0x XP.`;
+                } else if (itemId === 'stasis_field') {
+                    notifText = `⏳ Stasis Field Active! Streak is protected.`;
+                }
+
+                set((state) => ({
+                    inventory: newInventory,
+                    user: newUser,
+                    bosses: newBosses,
+                    notifications: [...state.notifications, { id: Date.now(), text: notifText }]
+                }));
+
+                // Save to supabase (proactively)
+                const { supabase, saveProgress } = await import('./supabaseClient');
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) await saveProgress(user.id, { ...get().user });
+            },
+
             t: (key, params = {}) => {
                 const state = get();
                 let text = translations[state.language][key] || key;
@@ -153,6 +194,12 @@ const useStore = create(
 
                 const xpGained = Math.floor(habit.xpReward * state.user.multiplier);
                 const dmgDealt = habit.dmg;
+
+                // Reset multiplier if Warp Drive was used
+                let newMultiplier = state.user.multiplier;
+                if (newMultiplier > 1.0) {
+                    newMultiplier = 1.0;
+                }
 
                 const updatedHabits = state.habits.map(h =>
                     h.id === id ? { ...h, completed: true, completedAt: new Date().toISOString() } : h
@@ -185,7 +232,7 @@ const useStore = create(
 
                 // Update local state
                 set((state) => ({
-                    user: { ...state.user, level: newLevel, xp: newXp, maxXp: newMaxXp },
+                    user: { ...state.user, level: newLevel, xp: newXp, maxXp: newMaxXp, multiplier: newMultiplier },
                     habits: updatedHabits,
                     bosses: updatedBosses,
                     notifications: [...state.notifications, newNotif]
