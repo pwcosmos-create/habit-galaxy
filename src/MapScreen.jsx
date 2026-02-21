@@ -215,7 +215,7 @@ export const MapScreen = ({ isActive = true }) => {
                         center={position}
                         zoom={17}
                         style={{ height: '100%', width: '100%', filter: 'invert(100%) hue-rotate(180deg) brightness(0.7) contrast(1.2)' }}
-                        zoomControl={false}
+                        zoomControl={true}
                     >
                         <TileLayer
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
