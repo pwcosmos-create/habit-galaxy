@@ -140,7 +140,21 @@ export default function AppLayout() {
             {activeTab === 'store' && <StoreScreen />}
             {activeTab === 'quests' && <BossQuestScreen />}
             {activeTab === 'social' && <RankingsScreen />}
-            {activeTab === 'explore' && <MapScreen />}
+
+            <div
+                style={{
+                    position: activeTab === 'explore' ? 'relative' : 'fixed',
+                    top: activeTab === 'explore' ? 'auto' : '-9999px',
+                    left: activeTab === 'explore' ? 'auto' : '-9999px',
+                    width: '100%',
+                    height: '100%',
+                    visibility: activeTab === 'explore' ? 'visible' : 'hidden',
+                    opacity: activeTab === 'explore' ? 1 : 0,
+                    zIndex: activeTab === 'explore' ? 'auto' : -50
+                }}
+            >
+                <MapScreen />
+            </div>
 
             {/* Bottom Glass Nav Bar */}
             <nav className="fixed bottom-0 left-0 right-0 z-[100] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex justify-center pointer-events-none">
