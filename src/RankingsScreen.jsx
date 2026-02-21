@@ -2,7 +2,7 @@ import React from 'react';
 import useStore from './store';
 
 export const RankingsScreen = () => {
-    const { t, language, setLanguage, user, incubator, stepsToday } = useStore();
+    const { t, language, setLanguage, incubator } = useStore();
 
     // Mock global data
     const leaderboard = [

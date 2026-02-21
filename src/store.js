@@ -209,7 +209,7 @@ const useStore = create(
                     if (state.incubator.active) {
                         return; // Already incubating
                     }
-                    set((s) => ({ incubator: { active: true, steps: 0, targetSteps: 10000 } }));
+                    set(() => ({ incubator: { active: true, steps: 0, targetSteps: 10000 } }));
                     notifText = `🥚 Alien Egg placed in the Incubator! Walk 10,000 steps to hatch.`;
                 }
 
