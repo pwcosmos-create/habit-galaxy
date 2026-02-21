@@ -81,7 +81,7 @@ export const logHabit = async (userId, habitId, xpGained, dmgDealt) => {
             habit_id: habitId,
             xp_gained: xpGained,
             dmg_dealt: dmgDealt,
-            logged_at: new Date().toISOString(),
+            completed_at: new Date().toISOString(),
         });
     return { data, error };
 };
